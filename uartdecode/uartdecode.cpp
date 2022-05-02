@@ -48,6 +48,22 @@ int Validate_UART(std::vector<uint8_t>& bitstream) {
     return start + 10;
 }
 
+bool Is_Aligned(std::vector<uint8_t>& bitstream, int begin) {
+    int start = begin, end = begin + 9;
+    if (end >= bitstream.size()) {
+        return -1;
+    }
+
+    while (end < bitstream.size()) {
+        if (~bitstream.at(start) & bitstream.at(end)) {
+            return false;
+        }
+        start += 10;
+        end += 10;
+    }
+    return true;
+}
+
 void Print_UART(std::vector<uint8_t>& bitstream, int start) {
     char buffer = 0;
     for (int i = start + 1; i < bitstream.size(); i += 10) {
@@ -64,12 +80,20 @@ void Print_UART(std::vector<uint8_t>& bitstream, int start) {
 // Frame alignment that uses organic machine learning to choose the correct frame.
 int Align_Frame(std::vector<uint8_t>& bitstream) {
     int start = 0;
-    for (int i = 0; i <= 9; i++) {
-        printf("%d: ", i);
-        
-        Print_UART(bitstream, i);
+
+    while (bitstream.at(start) != 1) {
+        start++;
     }
-    printf("Choose the option that looks the best:\n> ");
+
+    printf("Choose the option that looks the best:\n");
+
+    for (int i = start; i <= start + 9; i++) {
+        if (Is_Aligned(bitstream, i)) {
+            printf("%d: ", i);
+            Print_UART(bitstream, i);
+        }
+    }
+    printf("\n> ");
     std::cin >> start;
     printf("Option %d has been selected\n\n", start);
     return start + 10;
