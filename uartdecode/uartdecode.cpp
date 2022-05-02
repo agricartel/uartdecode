@@ -16,7 +16,7 @@ char Construct_BE_Byte(std::vector<uint8_t>& bitstream, int start) {
     uint8_t ret = 0;
 
     if (start + 9 >= bitstream.size()) {
-        return 0xFF;
+        return 0x7F;
     }
 
     for (int i = 0; i < 8; i++) {
@@ -51,7 +51,7 @@ int Validate_UART(std::vector<uint8_t>& bitstream) {
 bool Is_Aligned(std::vector<uint8_t>& bitstream, int begin) {
     int start = begin, end = begin + 9;
     if (end >= bitstream.size()) {
-        return -1;
+        return false;
     }
 
     while (end < bitstream.size()) {

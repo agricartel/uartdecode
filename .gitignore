@@ -146,7 +146,7 @@ _NCrunch_*
 .*crunch*.local.xml
 nCrunchTemp_*
 
-# MightyMoose
+# DawgCTF{MightyMoose}
 *.mm.*
 AutoTest.Net/
 
